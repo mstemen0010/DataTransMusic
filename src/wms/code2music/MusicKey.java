@@ -1,27 +1,21 @@
 package wms.code2music;
 
-import java.util.Stack;
-
-
 public class MusicKey extends MusicScale {
 
-    private boolean isWholeNote = false;
-    private boolean isHalfNote = false;
+    private final boolean isWholeNote = false;
+    private final boolean isHalfNote = false;
     private String value;
     private String natValue;
     private int octave;
     private int midiBaseValue; // the midi value based octave 0 (i.e. 21 = A0, 22 = Bb0, etc)
     private int midiNote;
     private int midiEvent;
-    
-    
+
     int octaveOffSet = 1;
 
-    
     public Note cvtLetterToNote(char charToCvt) {
 
         Note note = null;
-       
 
         //how many notes are in this key?
         int numNotesInKey = this.size();
@@ -41,36 +35,36 @@ public class MusicKey extends MusicScale {
                 case 65: // a
                 case 97: // A
                     note = this.toNote(charToCvt);
-                break;
-                
+                    break;
+
                 case 66: // b
                 case 98: // B
                     note = this.toNote(charToCvt);
-                break;
-                
+                    break;
+
                 case 67: // c
                 case 99: // C
                     note = this.toNote(charToCvt);
-                break;
-                
+                    break;
+
                 case 68:  // d
                 case 100: // D
                     note = this.toNote(charToCvt);
-                break;
-                
+                    break;
+
                 case 69:  // e
                 case 101: // E
                     note = this.toNote(charToCvt);
-                break;
-                
+                    break;
+
                 case 70:  // f
                 case 102: // F
                     note = this.toNote(charToCvt);
-                break;
+                    break;
                 case 71:  // g
                 case 103: // G
                     note = this.toNote(charToCvt);
-                break;
+                    break;
 
             }
 
@@ -79,15 +73,15 @@ public class MusicKey extends MusicScale {
         return note;
 
     }
-        String charRange = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
- //  D, E, F, G, A, B♭, and C. dm scale
- // C - Eb - F - Gb - G - Bb - C "blues" scale
+
     public Note toNote(char charToConvert) {
+        String charRange = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //  D, E, F, G, A, B♭, and C. dm scale
+        // C - Eb - F - Gb - G - Bb - C "blues" scale
         String retVal = "#";
         Note retNote = null;
 
-       //  hexTonicScale.add(new Note("C", 1));
-
+        //  hexTonicScale.add(new Note("C", 1));
         // figure out the note based on the scale and the octave based on how
         // many times it "loops" though the scale to get the relative note
         int charPos = charRange.indexOf(charToConvert);
@@ -98,7 +92,7 @@ public class MusicKey extends MusicScale {
         }
         // System.out.println("Relative pos is: " + relativeNotePos );
         // System.out.println("Mod value is: " + relativeNotePos);
-        Note noteToSend =  super.elementAt(relativeNotePos);
+        Note noteToSend = super.elementAt(relativeNotePos);
         int newOctave = relativeOctave + octaveOffSet;
         retNote = noteToSend;
         retNote.setOctave(newOctave);
