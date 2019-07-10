@@ -5,9 +5,11 @@
  */
 package wms.EPubToMusic;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -26,15 +28,20 @@ import org.jsoup.select.Elements;
 public class ParaStack {
 
     // use a scanner to build pararaph stack 
+    private static int stackCount = 0;
     final static String ParaDelim = "</P>";
     private final Stack<String> paraStack = new Stack<>();
+    private static Map<Integer, Stack<String>> finalWordStack = null;
     private final Set<String> wordSet = new HashSet<>();
     private final TreeMap<String, Integer> wordsByCount = new TreeMap<>();
     private final Stack<String> targetStack = new Stack<>();
-    
-    private int targetValue = 11; // good values: 5,7,9, 10
+
+    private int targetValue = 13; // good values: 5,7,9, 10
 
     public ParaStack(String stringToParse) {
+        if (finalWordStack == null) {
+            finalWordStack = new HashMap<>();
+        }
         build(stringToParse);
 
     }
@@ -43,93 +50,102 @@ public class ParaStack {
         // Element content = doc.getElementById("someid");
         Document doc = Jsoup.parse(strToUse);
         Elements p = doc.getElementsByTag("p");
-        System.out.println("Common words stack size is: " +  CommonWords.getCommonWordsSize());
-                
-        System.out.println("Target value is: " + targetValue );
+        System.out.println("Common words stack size is: " + CommonWords.getCommonWordsSize());
+
+        System.out.println("Target value is: " + targetValue);
+
         for (Element x : p) {
             // System.out.println(x.text());
             String cleanText = x.text().replaceAll("[^a-zA-Z0-9\\s+]", "").toLowerCase();
             paraStack.push(cleanText);
             updateWordStack(cleanText);
         }
-         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-         System.out.println("**************************************************************************************************************************");
-         System.out.println("##########################################################################################################################");
-         System.out.println("##########################################################################################################################");
-         System.out.println("##Common Words are: ##" + CommonWords.showCommonWords());
-         System.out.println("##########################################################################################################################");
-         System.out.println("##########################################################################################################################");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("**************************************************************************************************************************");
+        System.out.println("##########################################################################################################################");
+        System.out.println("##########################################################################################################################");
+        System.out.println("##Common Words are: ##" + CommonWords.showCommonWords());
+        System.out.println("##########################################################################################################################");
+        System.out.println("##########################################################################################################################");
 // System.out.println(wordsByCount); 
-         System.out.println("Resulting set is: " + this.targetStack);
-         Stack<String> cutDownList = this.candidateStackFromTargetStack();
-         System.out.println("Candidate stack is: " + cutDownList);
-         int u = CommonWords.compareToStack(cutDownList);
-         int d = targetStack.size();
-         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-         System.out.println("&&Trimed down candidate list is:&& " + CommonWords.getDiffStack(cutDownList)); 
-         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-         System.out.println("Size diff is: " + (d - u) );
-         System.out.println("**************************************************************************************************************************");
-         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("Resulting set is: " + this.targetStack);
+        Stack<String> cutDownList = this.candidateStackFromTargetStack();
+        System.out.println("Candidate stack is: " + cutDownList);
+        int u = CommonWords.compareToStack(cutDownList);
+        int d = targetStack.size();
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
+        System.out.println("&&Trimed down candidate list is:&& " + CommonWords.getDiffStack(cutDownList));
+        Integer key = (stackCount);
+        getFinalWordStack().put(key, CommonWords.getDiffStack(cutDownList));
+        stackCount++;
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("Size diff is: " + (d - u));
+        System.out.println("**************************************************************************************************************************");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     }
-    
+
     public String getWords() {
         return String.join(" ", wordSet);
     }
 
     public void updateWordStack(String words) {
         List<String> wordList = split(words);
-        for( String s:wordList ) {
+        for (String s : wordList) {
             this.wordSet.add(s);
-            if( ! this.wordsByCount.containsKey(s)) {
+            if (!this.wordsByCount.containsKey(s)) {
                 wordsByCount.put(s, new Integer(1));
-            }
-            else { 
+            } else {
                 int c = wordsByCount.get(s).intValue() + 1;
-                wordsByCount.put( s, c);
-                if( c == targetValue) {
+                wordsByCount.put(s, c);
+                if (c == targetValue) {
                     String t = s + "=" + String.valueOf(c);
                     this.targetStack.add(t);
                 }
             }
         }
     }
-    
+
     public Iterator<String> getTargetStack() {
         return this.targetStack.iterator();
     }
-    
+
     public Iterator<String> getWordList() {
         return this.wordSet.iterator();
     }
 
-    public String[] toStringArray(int paraNumber ) {
-        
-         String target = this.paraStack.get(paraNumber);
-         List<String> la = Stream.of(target.split(" ")).map (elem -> new String(elem)).collect(Collectors.toList());         
-         return StreamSupport.stream(la.spliterator(), false).toArray(String[]::new);
+    public String[] toStringArray(int paraNumber) {
+
+        String target = this.paraStack.get(paraNumber);
+        List<String> la = Stream.of(target.split(" ")).map(elem -> new String(elem)).collect(Collectors.toList());
+        return StreamSupport.stream(la.spliterator(), false).toArray(String[]::new);
     }
-    
+
     private static List<String> split(String str) {
         return Stream.of(str.split(" "))
-            .map(elem -> new String(elem))
-            .collect(Collectors.toList());
+                .map(elem -> new String(elem))
+                .collect(Collectors.toList());
     }
-    
+
     private Stack<String> candidateStackFromTargetStack() {
         Stack<String> candStack = new Stack<>();
-        for (String s: targetStack) {            
-            String cs = s.split("=")[0];            
+        for (String s : targetStack) {
+            String cs = s.split("=")[0];
             candStack.add(cs.replaceAll("\"", "").toLowerCase());
         }
-        
+
         return candStack;
     }
-    
-   
+
+    /**
+     * @return the finalWordStack
+     */
+    public static Map<Integer, Stack<String>> getFinalWordStack() {
+        return finalWordStack;
+    }
 
 }

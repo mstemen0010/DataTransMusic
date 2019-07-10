@@ -1,2 +1,5 @@
 /dist/
 /build/
+nbproject/project.properties
+nbproject/private/private.properties
+.idea/workspace.xml

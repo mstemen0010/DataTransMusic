@@ -11,7 +11,7 @@ import java.util.Stack;
 
 /**
  *
- * @author 173510
+ * @author Maithas Stemen
  */
 public class CommonWords {
 
@@ -19,7 +19,8 @@ public class CommonWords {
         "she", "he", "his", "with", "but", "for", "me", "as", "on", "you", "it", "at", "not", "could", "from", "into", "which", "the",
         "have", "all", "an", "Then", "up", "is", "or", "She", "so", "like", "be", "no", "before", "looked", "by", "what",
         "would", "when", "did", "knew", "were", "about", "me", "one", "very", "through", "how", "we", "upon", "out",
-        "himself", "herself", "him", "it", "there", "here", "this", "then"
+        "himself", "herself", "him", "it", "there", "here", "this", "then", "to", "too", "now", "one", "two", "three", "four", 
+        "five", "six", "seven", "eight", "nine", "ten", "now" , "while", "where"
     };
     final static Stack<String> COMMON_WORDS_STACK = new Stack<String>();
 

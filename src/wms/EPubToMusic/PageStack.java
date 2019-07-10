@@ -6,20 +6,14 @@
 package wms.EPubToMusic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import static java.util.Collections.list;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
-import java.util.stream.Stream;
-import javax.swing.text.Element;
 
 /**
  *
